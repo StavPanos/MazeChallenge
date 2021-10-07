@@ -38,7 +38,7 @@ public class MazeSolver {
 
     Directions nextMoveDirection = null;
 
-    List<Block> path = new ArrayList<Block>();
+    List<Block> path = new ArrayList<>();
 
     Directions previousDirection = null;
 
@@ -48,7 +48,7 @@ public class MazeSolver {
 
     public void initSolver() {
         nextMoveDirection = null;
-        path = new ArrayList<Block>();
+        path = new ArrayList<>();
         path.add(maze.getMazeStart());
         visitsPerBlock = new HashMap<>();
     }
