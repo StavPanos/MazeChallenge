@@ -7,6 +7,8 @@ import com.etraveligroup.mazechallenge.model.maze.throwable.EmptyMazeFileExcepti
 import com.etraveligroup.mazechallenge.model.maze.throwable.MazeFileIllegalCharacterException;
 import com.etraveligroup.mazechallenge.model.maze.throwable.MazeFileMalformedException;
 import com.etraveligroup.mazechallenge.model.maze.throwable.MazeSizeOutOfBoundsException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -19,6 +21,8 @@ import java.util.Map;
  * Maze Builder class is used for building mazes from external sources. Also provides validation while building the maze.
  **/
 public class MazeBuilder {
+
+    private static final Logger logger = LogManager.getLogger(MazeBuilder.class);
 
     /**
      * The system path for the directory of the maze text file
@@ -41,7 +45,8 @@ public class MazeBuilder {
         Map<Coordinates, Block> blocks = new HashMap<>();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(FILE_PATH))) {
-            System.out.println("Maze built started...\nReading from file: " + FILE_PATH);
+            logger.info("Maze built started...");
+            logger.info("Reading from file: " + FILE_PATH);
 
             String line;
             int lineCount = 0, x = 1, y = 1;
@@ -58,7 +63,6 @@ public class MazeBuilder {
                     blocks.put(cor, new Block(cor, mapBlockType(cor, ch)));
                 }
                 x++;
-                // System.out.println(line);
             }
             maze.setMazeHeight(lineCount);
             maze.setMazeWidth(y - 1);
@@ -70,12 +74,13 @@ public class MazeBuilder {
             } else if (endPointCount == 0) {
                 throw new MazeFileMalformedException("Maze should always have 1 end point");
             }
-            System.out.println("File :" + FILE_PATH + " reading completed!\nMaze built competed!\n");
+            logger.info("File :" + FILE_PATH + " reading completed!");
+            logger.info("Maze built competed!\n");
 
         } catch (FileNotFoundException f) {
             throw new MazeFileMalformedException("Error! File does not exist");
         } catch (IOException e) {
-            System.out.println("Error! Unexpacted problem while reading file");
+            logger.error("Error! Unexpacted problem while reading file");
         }
         maze.setBlocks(blocks);
         maze.setName("Maze :" + FILE_PATH);

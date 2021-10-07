@@ -6,6 +6,8 @@ import com.etraveligroup.mazechallenge.model.block.Block;
 import com.etraveligroup.mazechallenge.model.block.BlockTypes;
 import com.etraveligroup.mazechallenge.model.block.Coordinates;
 import com.etraveligroup.mazechallenge.model.maze.Maze;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
@@ -16,6 +18,8 @@ import java.util.*;
  * (may produce different outputs cause of randomness) or Deterministic implementation (always same output).</p>
  */
 public class MazeSolver {
+
+    private static final Logger logger = LogManager.getLogger(MazeSolver.class);
 
     private Maze maze;
 
@@ -58,9 +62,14 @@ public class MazeSolver {
      * @return The Actor's path from start to finish
      */
     public List<Block> randomMouse(Actor actor) {
-        System.out.println("For " + maze.getName() + "\nStarting Random mouse algorithm execution...");
+        // Log
+        logger.info("For " + maze.getName());
+        logger.info("Starting Random mouse algorithm execution...");
+
+        // init
         initSolver();
         this.actor = actor;
+
         // Set actor's current position to the starting point of the maze
         setActorStartingPosition();
 
@@ -92,7 +101,7 @@ public class MazeSolver {
                 // Add this block in Actor's path
                 path.add(possibleMoves.get(nextMoveDirection));
             }
-            System.out.println("Execution completed");
+            logger.info("Execution completed!");
             printPath();
         }
         return path;
@@ -116,9 +125,14 @@ public class MazeSolver {
      * @return The Actor's path from start to finish
      */
     public List<Block> markThePath(Actor actor, boolean withRandomness) {
-        System.out.println("For " + maze.getName() + "\nStarting Mark The Path algorithm" + (withRandomness ? " Randomness" : " Deterministic") + " version execution...");
+        // Log
+        logger.info("For " + maze.getName());
+        logger.info("Starting Mark The Path algorithm" + (withRandomness ? " Randomness" : " Deterministic") + " version execution...");
+
+        // init
         initSolver();
         this.actor = actor;
+
         // Set actor's current position to the starting point of the maze
         setActorStartingPosition();
         // Add starting position to visitsPerBlock
@@ -159,12 +173,14 @@ public class MazeSolver {
                 // Add this block in Actor's path
                 path.add(possibleMoves.get(nextMoveDirection));
             }
-            System.out.println("Execution completed");
+            logger.info("Execution completed");
             printPath();
         }
         return path;
     }
 
+    /** Default withRandomness param is false
+     */
     public List<Block> markThePath(Actor actor) {
         return markThePath(actor, false);
     }
@@ -349,13 +365,12 @@ public class MazeSolver {
      * Prints Actor's path
      */
     public void printPath() {
-        System.out.println("Path:");
 
         StringBuilder outputPath = new StringBuilder("");
-
+        // Build the path as string
         path.forEach(block -> outputPath.append(block.toString() + ", "));
-
-        System.out.println(outputPath.substring(0, outputPath.length() - 2) + "\n");
+        // Remove the last 2 characters (comma and blank)
+        logger.info(outputPath.substring(0, outputPath.length() - 2) + "\n");
     }
 
     public List<Block> getPath() {
