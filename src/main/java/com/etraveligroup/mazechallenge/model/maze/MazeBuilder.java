@@ -29,9 +29,7 @@ public class MazeBuilder {
      **/
     private final String FILE_PATH;
 
-    public MazeBuilder() {
-        FILE_PATH = ".\\files\\maze.txt";
-    }
+    public MazeBuilder() { FILE_PATH = ".\\files\\maze.txt"; }
 
     public MazeBuilder(String filePath) {
         FILE_PATH = filePath;

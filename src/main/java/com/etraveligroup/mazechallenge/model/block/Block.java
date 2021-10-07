@@ -3,8 +3,8 @@ package com.etraveligroup.mazechallenge.model.block;
 import java.util.Objects;
 
 public class Block {
-    Coordinates coordinates;
-    BlockTypes blockType;
+    private Coordinates coordinates;
+    private BlockTypes blockType;
 
     public Block(Coordinates coordinates, BlockTypes blockType) {
         this.coordinates = coordinates;
