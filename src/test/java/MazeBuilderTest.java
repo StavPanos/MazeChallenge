@@ -4,6 +4,8 @@ import com.etraveligroup.mazechallenge.model.maze.throwable.MazeFileMalformedExc
 import com.etraveligroup.mazechallenge.model.maze.MazeBuilder;
 import org.junit.Test;
 
+import java.io.IOException;
+
 public class MazeBuilderTest {
 
     private MazeBuilder mazeBuilderEmptyFile = new MazeBuilder(".\\src\\test\\files\\mazeBuilderTest\\empty_maze.txt");
@@ -15,37 +17,37 @@ public class MazeBuilderTest {
 
     // Empty file
     @Test(expected = EmptyMazeFileException.class)
-    public void testEmptyMazeException() throws MazeFileMalformedException {
+    public void testEmptyMazeException() throws MazeFileMalformedException, IOException {
         mazeBuilderEmptyFile.builtMaze();
     }
 
     // Maze file contains character other than ('S', '_', 'X', 'G')
     @Test(expected = MazeFileIllegalCharacterException.class)
-    public void testIllegalCharacterException() throws MazeFileMalformedException {
+    public void testIllegalCharacterException() throws MazeFileMalformedException, IOException {
     mazeBuilderIllegalCharacter.builtMaze();
     }
 
     // Starting Block does not exist
     @Test(expected = MazeFileMalformedException.class)
-    public void testMalformedMazeNoStartBlock() throws MazeFileMalformedException {
+    public void testMalformedMazeNoStartBlock() throws MazeFileMalformedException, IOException {
         mazeBuilderMalformedNoStartBlock.builtMaze();
     }
 
     // Ending Block does not exist
     @Test(expected = MazeFileMalformedException.class)
-    public void testMalformedMazeNoEndBlock() throws MazeFileMalformedException {
+    public void testMalformedMazeNoEndBlock() throws MazeFileMalformedException, IOException {
         mazeBuilderMalformedNoEndBlock.builtMaze();
     }
 
     // More than 1 Starting blocks > 1
     @Test(expected = MazeFileMalformedException.class)
-    public void testMalformedMazeMoreThanOneStartPoints() throws MazeFileMalformedException {
+    public void testMalformedMazeMoreThanOneStartPoints() throws MazeFileMalformedException, IOException {
         mazeBuilderMalformedMoreThanOneStarts.builtMaze();
     }
 
     // More than 1 Ending blocks > 1
     @Test(expected = MazeFileMalformedException.class)
-    public void testMalformedMazeMoreThanOneEndPoints() throws MazeFileMalformedException {
+    public void testMalformedMazeMoreThanOneEndPoints() throws MazeFileMalformedException, IOException {
         mazeBuilderMalformedMoreThanOneEnds.builtMaze();
     }
 

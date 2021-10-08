@@ -8,6 +8,7 @@ import com.etraveligroup.mazechallenge.model.maze.MazeBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class MazeSolverTest {
     private Block block7 = new Block(new Coordinates(3, 1), END);
 
     @Before
-    public void setUp() throws MazeFileMalformedException {
+    public void setUp() throws MazeFileMalformedException, IOException {
         // Built maze
         maze = mazeBuilder.builtMaze();
         // Create actor

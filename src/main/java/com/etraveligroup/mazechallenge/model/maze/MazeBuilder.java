@@ -29,7 +29,9 @@ public class MazeBuilder {
      **/
     private final String FILE_PATH;
 
-    public MazeBuilder() { FILE_PATH = ".\\files\\maze.txt"; }
+    public MazeBuilder() {
+        FILE_PATH = ".\\files\\maze.txt";
+    }
 
     public MazeBuilder(String filePath) {
         FILE_PATH = filePath;
@@ -39,7 +41,7 @@ public class MazeBuilder {
 
     private int startPointCount = 0, endPointCount = 0;
 
-    public Maze builtMaze() throws MazeFileMalformedException {
+    public Maze builtMaze() throws MazeFileMalformedException, IOException {
         Map<Coordinates, Block> blocks = new HashMap<>();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(FILE_PATH))) {
@@ -79,6 +81,7 @@ public class MazeBuilder {
             throw new MazeFileMalformedException("Error! File does not exist");
         } catch (IOException e) {
             logger.error("Error! Unexpacted problem while reading file");
+            throw e;
         }
         maze.setBlocks(blocks);
         maze.setName("Maze :" + FILE_PATH);
@@ -95,24 +98,16 @@ public class MazeBuilder {
             case 'S':
                 if (++startPointCount > 1)
                     throw new MazeFileMalformedException("More than 1 start points!");
-                setMazeStart(coordinates);
+                maze.setMazeStart(new Block(coordinates, BlockTypes.START));
                 return BlockTypes.START;
             case 'G':
                 if (++endPointCount > 1)
                     throw new MazeFileMalformedException("More than 1 end points!");
-                setMazeEnd(coordinates);
+                maze.setMazeEnd(new Block(coordinates, BlockTypes.END));
                 return BlockTypes.END;
             default:
                 throw new MazeFileIllegalCharacterException("Not acceptable character!");
         }
-    }
-
-    private void setMazeStart(Coordinates coordinates) {
-        maze.setMazeStart(new Block(coordinates, BlockTypes.START));
-    }
-
-    private void setMazeEnd(Coordinates coordinates) {
-        maze.setMazeEnd(new Block(coordinates, BlockTypes.END));
     }
 
 }

@@ -15,16 +15,8 @@ public class Block {
         return coordinates;
     }
 
-    public void setCoordinates(Coordinates coordinates) {
-        this.coordinates = coordinates;
-    }
-
     public BlockTypes getBlockType() {
         return blockType;
-    }
-
-    public void setBlockType(BlockTypes blockType) {
-        this.blockType = blockType;
     }
 
     @Override
@@ -32,12 +24,12 @@ public class Block {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Block block = (Block) o;
-        return Objects.equals(coordinates, block.coordinates);
+        return Objects.equals(coordinates, block.coordinates) && blockType == block.blockType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(coordinates);
+        return Objects.hash(coordinates, blockType);
     }
 
     @Override

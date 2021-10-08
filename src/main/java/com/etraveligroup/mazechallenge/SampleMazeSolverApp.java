@@ -7,6 +7,8 @@ import com.etraveligroup.mazechallenge.model.maze.throwable.MazeFileMalformedExc
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+
 public class SampleMazeSolverApp {
 
     private static final Logger logger = LogManager.getLogger(SampleMazeSolverApp.class);
@@ -18,7 +20,9 @@ public class SampleMazeSolverApp {
 
         try {
             // Built maze from external file
-            Maze maze = mazeBuilder.builtMaze();
+            Maze maze = null;
+
+            maze = mazeBuilder.builtMaze();
 
             // Create MazeSolver object to run different maze algorithms
             MazeSolver mazeSolver = new MazeSolver(maze);
@@ -38,7 +42,7 @@ public class SampleMazeSolverApp {
             // If no second parameter is passed then the deterministic version is executed by default
             //mazeSolver.markThePath(actor);
 
-        } catch (MazeFileMalformedException ex) {
+        } catch (MazeFileMalformedException | IOException ex) {
             logger.error("Exception occured: " + ex);
         }
     }

@@ -335,14 +335,6 @@ public class MazeSolver {
     }
 
     /**
-     * Throws an exception if actors current position is not the starting block ({@code BlockTypes.START}) of the maze
-     */
-    private void checkActorsStartingPosition() {
-        if (!actor.getCurrentPosition().equals(maze.getMazeStart().getCoordinates()))
-            throw new IllegalStateException("Actor should start from the starting point of the maze");
-    }
-
-    /**
      * Set actor's current position to the starting point of the maze
      */
     private void setActorStartingPosition() {
