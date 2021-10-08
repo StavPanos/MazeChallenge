@@ -179,7 +179,8 @@ public class MazeSolver {
         return path;
     }
 
-    /** Default withRandomness param is false
+    /**
+     * Default withRandomness param is false
      */
     public List<Block> markThePath(Actor actor) {
         return markThePath(actor, false);
@@ -199,7 +200,7 @@ public class MazeSolver {
      * @return The next direction deterministically selected from all possible next directions
      */
     public Directions deterministicSelectNextMoveDirectionWithMinVisits() {
-        // Find the minimum of visits
+        // Find the minimum of visits for the next possible moves
         int minVisits = findMinimumVisits();
 
         for (Directions direction : Directions.values()) {
@@ -218,7 +219,7 @@ public class MazeSolver {
      * @return The next direction randomly selected from all possible next directions
      */
     public Directions randomlySelectNextMoveDirectionWithMinVisits() {
-        // Find the minimum of visits
+        // Find the minimum of visits for the next possible moves
         int minVisits = findMinimumVisits();
 
         // Shuffle all next possible directions
@@ -349,26 +350,35 @@ public class MazeSolver {
     }
 
     /**
-     * Calculates the minimum number of visits from the field {@code MazeSolver.visitsPerBlock}
+     * For the next possible moves, calculates the minimum number of visits. If exist a block that is not yet visited then minimum number of visits is zero
      *
-     * @return The minimum number of visits for the next accessible blocks
+     * @return The minimum number of visits from the next accessible blocks
      */
     private int findMinimumVisits() {
-        int min = Integer.MAX_VALUE;
-        for (Block block : possibleMoves.values()) {
-            min = visitsPerBlock.get(block) == null ? 0 : visitsPerBlock.get(block) < min ? visitsPerBlock.get(block) : min;
+        // Previous visits for the next possible moves
+        Map<Block, Integer> possibleMovesVisits = new HashMap<>();
+
+        // For each next possible move
+        for (Block nextMove : possibleMoves.values()) {
+            // If there is any block that is not yet visited then minimum previous visits is zero
+            if (visitsPerBlock.get(nextMove) == null) {
+                return 0;
+            }
+            // Add the previous visits to map
+            possibleMovesVisits.put(nextMove, visitsPerBlock.get(nextMove) == null ? 0 : visitsPerBlock.get(nextMove));
         }
-        return min;
+        // Return the next move with minimum number of previous visits
+        return Collections.min(possibleMovesVisits.values());
     }
 
     /**
      * Prints Actor's path
      */
     public void printPath() {
-
         StringBuilder outputPath = new StringBuilder("");
         // Build the path as string
         path.forEach(block -> outputPath.append(block.toString() + ", "));
+
         // Remove the last 2 characters (comma and blank)
         logger.info(outputPath.substring(0, outputPath.length() - 2) + "\n");
     }

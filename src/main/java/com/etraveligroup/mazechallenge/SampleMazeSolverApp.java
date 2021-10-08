@@ -7,9 +7,6 @@ import com.etraveligroup.mazechallenge.model.maze.throwable.MazeFileMalformedExc
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SampleMazeSolverApp {
 
     private static final Logger logger = LogManager.getLogger(SampleMazeSolverApp.class);
@@ -17,7 +14,7 @@ public class SampleMazeSolverApp {
     public static void main(String[] args) {
 
         // Parameter the external maze file path (default path: ".\\files\\maze.txt")
-        MazeBuilder mazeBuilder = new MazeBuilder(".\\files\\Custom_maze.txt");
+        MazeBuilder mazeBuilder = new MazeBuilder();
 
         try {
             // Built maze from external file
@@ -40,14 +37,6 @@ public class SampleMazeSolverApp {
 
             // If no second parameter is passed then the deterministic version is executed by default
             //mazeSolver.markThePath(actor);
-
-            List<? extends Number> myNumsI = new ArrayList<Integer>();
-            List<? extends Number> myNumsF = new ArrayList<Float>();
-            List<? extends Number> myNumsD = new ArrayList<Double>();
-
-            Number n = myNumsD.get(0);
-
-            myNumsD.add(45L); //compiler error
 
         } catch (MazeFileMalformedException ex) {
             logger.error("Exception occured: " + ex);
