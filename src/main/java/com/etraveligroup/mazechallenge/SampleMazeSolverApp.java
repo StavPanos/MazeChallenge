@@ -4,6 +4,8 @@ import com.etraveligroup.mazechallenge.model.actor.Actor;
 import com.etraveligroup.mazechallenge.model.maze.Maze;
 import com.etraveligroup.mazechallenge.model.maze.MazeBuilder;
 import com.etraveligroup.mazechallenge.model.maze.throwable.MazeFileMalformedException;
+import com.etraveligroup.mazechallenge.solver.MarkThePathMazeSolver;
+import com.etraveligroup.mazechallenge.solver.RandomMouseMazeSolver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,28 +18,27 @@ public class SampleMazeSolverApp {
     public static void main(String[] args) {
 
         // Parameter the external maze file path (default path: ".\\files\\maze.txt")
-        MazeBuilder mazeBuilder = new MazeBuilder();
+        MazeBuilder mazeBuilder = new MazeBuilder(".\\files\\simple_maze.txt");
 
         try {
             // Built maze from external file
-            Maze maze = null;
-
-            maze = mazeBuilder.builtMaze();
-
-            // Create MazeSolver object to run different maze algorithms
-            MazeSolver mazeSolver = new MazeSolver(maze);
+            Maze maze = mazeBuilder.builtMaze();
 
             // Create Actor
             Actor actor = new Actor();
 
+            // Create MazeSolver object to run different maze algorithms
+            RandomMouseMazeSolver randomMouse = new RandomMouseMazeSolver(maze, actor);
+            MarkThePathMazeSolver markThePath = new MarkThePathMazeSolver(maze, actor);
+
             // Execute 'Random mouse' algorithm
-            mazeSolver.randomMouse(actor);
+            randomMouse.solveMaze();
 
             // Execute 'Mark the path' algorithm deterministic version
-            mazeSolver.markThePath(actor, false);
+            markThePath.solveMaze(false);
 
             // Execute 'Mark the path' algorithm with randomness version
-            mazeSolver.markThePath(actor, true);
+            markThePath.solveMaze(true);
 
             // If no second parameter is passed then the deterministic version is executed by default
             //mazeSolver.markThePath(actor);

@@ -38,8 +38,7 @@ public class MazeBuilder {
     }
 
     private Maze maze = new Maze();
-
-    private int startPointCount = 0, endPointCount = 0;
+    private FileValidator validator = new FileValidator();
 
     public Maze builtMaze() throws MazeFileMalformedException, IOException {
         Map<Coordinates, Block> blocks = new HashMap<>();
@@ -52,15 +51,22 @@ public class MazeBuilder {
             int lineCount = 0, x = 1, y = 1;
 
             while ((line = bufferedReader.readLine()) != null) {
-                lineCount++;
-                if (lineCount > Maze.MAX_DIMENSION || line.length() > Maze.MAX_DIMENSION)
+                try {
+                    lineCount++;
+                    int lineLentgh = line.length();
+                } catch (ArithmeticException ex) {
                     throw new MazeSizeOutOfBoundsException("Maze too large!");
+                }
 
                 char[] tempArr = line.toCharArray();
                 y = 1;
                 for (char ch : tempArr) {
-                    Coordinates cor = new Coordinates(x, y++);
-                    blocks.put(cor, new Block(cor, mapBlockType(cor, ch)));
+                    if (validator.validateNextCharacter(ch)) {
+                        Coordinates cor = new Coordinates(x, y++);
+                        blocks.put(cor, new Block(cor, mapBlockType(cor, ch)));
+                    } else {
+                        throw new MazeFileIllegalCharacterException("Not acceptable character!");
+                    }
                 }
                 x++;
             }
@@ -69,9 +75,9 @@ public class MazeBuilder {
 
             if (lineCount == 0) {
                 throw new EmptyMazeFileException("Empty maze!");
-            } else if (startPointCount == 0) {
+            } else if (!validator.startPointExist()) {
                 throw new MazeFileMalformedException("Maze should always have 1 start point");
-            } else if (endPointCount == 0) {
+            } else if (!validator.endPointExist()) {
                 throw new MazeFileMalformedException("Maze should always have 1 end point");
             }
             logger.info("File :" + FILE_PATH + " reading completed!");
@@ -89,24 +95,18 @@ public class MazeBuilder {
         return maze;
     }
 
-    private BlockTypes mapBlockType(Coordinates coordinates, char c) throws MazeFileMalformedException {
+    private BlockTypes mapBlockType(Coordinates coordinates, char c) {
         switch (c) {
             case '_':
                 return BlockTypes.EMPTY;
             case 'X':
                 return BlockTypes.WALL;
             case 'S':
-                if (++startPointCount > 1)
-                    throw new MazeFileMalformedException("More than 1 start points!");
                 maze.setMazeStart(new Block(coordinates, BlockTypes.START));
                 return BlockTypes.START;
-            case 'G':
-                if (++endPointCount > 1)
-                    throw new MazeFileMalformedException("More than 1 end points!");
+            default:
                 maze.setMazeEnd(new Block(coordinates, BlockTypes.END));
                 return BlockTypes.END;
-            default:
-                throw new MazeFileIllegalCharacterException("Not acceptable character!");
         }
     }
 

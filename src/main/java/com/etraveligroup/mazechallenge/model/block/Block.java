@@ -3,6 +3,7 @@ package com.etraveligroup.mazechallenge.model.block;
 import java.util.Objects;
 
 public class Block {
+
     private Coordinates coordinates;
     private BlockTypes blockType;
 

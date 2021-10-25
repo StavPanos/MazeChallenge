@@ -20,7 +20,7 @@ public class Maze {
 
     private String name;
 
-    private Map<Coordinates, Block> blocks = new HashMap<Coordinates, Block>();
+    private Map<Coordinates, Block> blocks = new HashMap<>();
 
     protected Maze() {
     }
@@ -73,13 +73,17 @@ public class Maze {
         this.name = name;
     }
 
-    public void printMaze() {
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+
         for (int x=1;x<=mazeHeight;x++) {
             for (int y=1;y<=mazeWidth;y++) {
-                System.out.print(blocks.get(new Coordinates(x, y)).getBlockType() + " ");
+                stringBuilder.append(blocks.get(new Coordinates(x, y)).getBlockType()).append(" ");
             }
-            System.out.println();
+            stringBuilder.append("\n");
         }
+        return stringBuilder.toString();
     }
 
 }

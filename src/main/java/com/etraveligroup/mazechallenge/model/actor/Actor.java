@@ -4,7 +4,7 @@ import com.etraveligroup.mazechallenge.model.block.Coordinates;
 
 public class Actor {
 
-    protected Coordinates currentPosition;
+    private Coordinates currentPosition;
 
     public Actor() {
 

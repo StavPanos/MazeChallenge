@@ -1,11 +1,14 @@
-import com.etraveligroup.mazechallenge.MazeSolver;
+import com.etraveligroup.mazechallenge.solver.MarkThePathMazeSolver;
+import com.etraveligroup.mazechallenge.solver.MazeSolver;
 import com.etraveligroup.mazechallenge.model.actor.Actor;
 import com.etraveligroup.mazechallenge.model.maze.throwable.MazeFileMalformedException;
 import com.etraveligroup.mazechallenge.model.block.Block;
 import com.etraveligroup.mazechallenge.model.block.Coordinates;
 import com.etraveligroup.mazechallenge.model.maze.Maze;
 import com.etraveligroup.mazechallenge.model.maze.MazeBuilder;
+import com.etraveligroup.mazechallenge.solver.RandomMouseMazeSolver;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -19,16 +22,18 @@ import static com.etraveligroup.mazechallenge.model.block.BlockTypes.EMPTY;
 
 public class MazeSolverTest {
 
-    private MazeSolver mazeSolver;
-    private MazeSolver mazeSolver2;
+    private static RandomMouseMazeSolver randomMouse;
+    private static RandomMouseMazeSolver randomMouseLarge;
+    private static MarkThePathMazeSolver markThePath;
+    private static MarkThePathMazeSolver markThePathLarge;
 
-    private MazeBuilder mazeBuilder = new MazeBuilder(".\\src\\test\\files\\mazeSolverTest\\simple_maze.txt");
-    private MazeBuilder largeMazeBuilder = new MazeBuilder(".\\src\\test\\files\\mazeSolverTest\\large_maze.txt");
+    private static MazeBuilder mazeBuilder = new MazeBuilder(".\\src\\test\\files\\mazeSolverTest\\simple_maze.txt");
+    private static MazeBuilder largeMazeBuilder = new MazeBuilder(".\\src\\test\\files\\mazeSolverTest\\large_maze.txt");
 
-    private Maze maze;
-    private Maze largeMaze;
+    private static Maze maze;
+    private static Maze largeMaze;
 
-    private Actor actor;
+    private static Actor actor;
 
     private Block block1 = new Block(new Coordinates(1, 1), START);
     private Block block2 = new Block(new Coordinates(1, 2), EMPTY);
@@ -38,83 +43,86 @@ public class MazeSolverTest {
     private Block block6 = new Block(new Coordinates(3, 2), EMPTY);
     private Block block7 = new Block(new Coordinates(3, 1), END);
 
-    @Before
-    public void setUp() throws MazeFileMalformedException, IOException {
+    @BeforeClass
+    public static void setUp() throws MazeFileMalformedException, IOException {
         // Built maze
         maze = mazeBuilder.builtMaze();
         // Create actor
         actor = new Actor();
 
-        // Create maze solver
-        mazeSolver = new MazeSolver(maze);
+        // Create maze solvers
+        randomMouse = new RandomMouseMazeSolver(maze, actor);
+        markThePath = new MarkThePathMazeSolver(maze, actor);
 
         // Built large maze
         largeMaze = largeMazeBuilder.builtMaze();
-        // Create maze solver
-        mazeSolver2 = new MazeSolver(largeMaze);
+
+        // Create maze solvers
+        randomMouseLarge = new RandomMouseMazeSolver(largeMaze, actor);
+        markThePathLarge = new MarkThePathMazeSolver(largeMaze, actor);
     }
 
     // Simple maze
     @Test
     public void deterministicMarkThePathAlgorithmSimpleMaze() {
         // when:
-        mazeSolver.markThePath(actor, false);
+        markThePath.solveMaze(false);
         // then:
-        assertEquals(mazeSolver.getPath(), new ArrayList<Block>(List.of(block1, block2, block3, block4, block5, block6, block7)));
+        assertEquals(markThePath.getPath(), new ArrayList<>(List.of(block1, block2, block3, block4, block5, block6, block7)));
     }
 
     // Simple maze
     @Test
     public void randomnessMarkThePathAlgorithmSimpleMaze() {
         // when:
-        mazeSolver.markThePath(actor, true);
+        markThePath.solveMaze(true);
         // then:
-        assertEquals(mazeSolver.getPath(), new ArrayList<Block>(List.of(block1, block2, block3, block4, block5, block6, block7)));
+        assertEquals(markThePath.getPath(), new ArrayList<>(List.of(block1, block2, block3, block4, block5, block6, block7)));
     }
 
     // Simple maze
     @Test
     public void randomMouseAlgorithmSimpleMaze() {
         // when:
-        mazeSolver.randomMouse(actor);
+        randomMouse.solveMaze();
         // then:
-        assertEquals(mazeSolver.getPath(), new ArrayList<Block>(List.of(block1, block2, block3, block4, block5, block6, block7)));
+        assertEquals(randomMouse.getPath(), new ArrayList<>(List.of(block1, block2, block3, block4, block5, block6, block7)));
     }
 
     // Large maze
     @Test
     public void deterministicMarkThePathAlgorithmLargeMaze() {
         // when:
-        mazeSolver2.markThePath(actor, false);
+        markThePathLarge.solveMaze(false);
 
-        int lastBlockIndex = mazeSolver2.getPath().size() - 1;
+        int lastBlockIndex = markThePathLarge.getPath().size() - 1;
 
         // then:
-        assertEquals(mazeSolver2.getPath().get(lastBlockIndex).getBlockType(), END);
+        assertEquals(markThePathLarge.getPath().get(lastBlockIndex).getBlockType(), END);
     }
 
     // Large maze
     @Test
     public void randomnessMarkThePathAlgorithmLargeMaze() {
         // when:
-        mazeSolver2.markThePath(actor, true);
+        markThePathLarge.solveMaze();
 
-        int lastBlockIndex = mazeSolver2.getPath().size() - 1;
+        int lastBlockIndex = markThePathLarge.getPath().size() - 1;
 
         // then:
-        assertEquals(mazeSolver2.getPath().get(lastBlockIndex).getBlockType(), END);
+        assertEquals(markThePathLarge.getPath().get(lastBlockIndex).getBlockType(), END);
     }
 
     // Large maze
     @Test
     public void randomMouseAlgorithmLargeMaze() {
         // when:
-        mazeSolver2.randomMouse(actor);
+        randomMouseLarge.solveMaze();
 
-        int lastBlockIndex = mazeSolver2.getPath().size() - 1;
+        int lastBlockIndex = randomMouseLarge.getPath().size() - 1;
 
         // then:
-        assertEquals(mazeSolver2.getPath().get(lastBlockIndex).getBlockType(), END);
+        assertEquals(randomMouseLarge.getPath().get(lastBlockIndex).getBlockType(), END);
     }
 
 }
